@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'homepage.dart';
 
 // Uncomment this when your home page exists:
 // import 'eco_collect_home_page.dart';
@@ -91,20 +94,19 @@ class _LoginPageState extends State<LoginPage> {
           password: password,
         );
 
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString("email", email);
+
         if (!mounted) return;
 
-        showSnackBar('Welcome back!');
+        showSnackBar(email.toLowerCase() == 'admin@gmail.com' ? 'Welcome Admin!' : 'Welcome back!');
 
-        // Navigate to your home page here.
-        //
-        // Example:
-        //
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => const EcoCollectHomePage(),
-        //   ),
-        // );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const EcoCollectHomePage(),
+          ),
+        );
       }
     } on FirebaseAuthException catch (e) {
       String message;
